@@ -28,7 +28,7 @@ const Dashboard: React.FC<{ user: User; token: string; onLogout: () => void }> =
   const [newCanvasName, setNewCanvasName] = useState('');
   const [creatingCanvas, setCreatingCanvas] = useState(false);
 
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+  const API_URL = import.meta.env.VITE_API_URL || 'https://figma-clone-app-gnsu.vercel.app//api';
 
   // Fetch canvases
   useEffect(() => {

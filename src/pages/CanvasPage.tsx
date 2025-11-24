@@ -10,7 +10,7 @@ interface User {
 
 const CanvasPage: React.FC<{ user: User; token: string }> = ({ token }) => {
   const { canvasId } = useParams<{ canvasId: string }>();
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+  const API_URL = import.meta.env.VITE_API_URL || 'https://figma-clone-app-gnsu.vercel.app//api';
 
   return (
     <CanvasEditorNew

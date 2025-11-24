@@ -20,7 +20,7 @@ const LoginPage: React.FC<{ onLoginSuccess: (token: string, user: any) => void }
     password: ''
   });
 
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+  const API_URL = import.meta.env.VITE_API_URL || 'https://figma-clone-app-gnsu.vercel.app//api';
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
