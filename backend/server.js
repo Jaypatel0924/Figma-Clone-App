@@ -125,7 +125,7 @@ app.use(morgan('combined'));
 
 // CORS
 app.use(cors({
-  origin: process.env.CLIENT_URL?.split(",") || "*",
+  origin: process.env.CLIENT_URL?.split(",") || "https://figma-clone-app-6msf-44fi46uc0-jay-patels-projects-21397060.vercel.app",
   credentials: true
 }));
 
