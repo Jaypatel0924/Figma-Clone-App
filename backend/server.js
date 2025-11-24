@@ -157,5 +157,16 @@ app.get('/health', (req, res) => {
   res.json({ status: "OK" });
 });
 
+// Serve static files from frontend/dist (production only)
+if (process.env.NODE_ENV === 'production') {
+  const path = require('path');
+  app.use(express.static(path.join(__dirname, '../frontend/dist')));
+  
+  // SPA fallback
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+  });
+}
+
 // Export for Vercel
 module.exports = app;

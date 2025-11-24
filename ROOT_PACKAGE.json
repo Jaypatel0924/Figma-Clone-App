@@ -1,0 +1,28 @@
+{
+  "name": "figma-clone-app",
+  "version": "1.0.0",
+  "description": "A full-stack Figma clone app",
+  "main": "backend/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix frontend\" \"npm run dev --prefix backend\"",
+    "build": "npm run build --prefix frontend && npm run build:backend",
+    "build:backend": "echo 'Backend is ready for production'",
+    "build:frontend": "npm run build --prefix frontend",
+    "start": "npm start --prefix backend",
+    "backend": "npm run dev --prefix backend",
+    "frontend": "npm run dev --prefix frontend",
+    "install:all": "npm install && npm install --prefix frontend && npm install --prefix backend"
+  },
+  "keywords": [
+    "figma",
+    "design",
+    "editor",
+    "canvas"
+  ],
+  "author": "Jay Patel",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

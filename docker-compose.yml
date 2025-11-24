@@ -14,11 +14,11 @@ services:
       - figma-network
     restart: unless-stopped
 
-  backend:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: figma-backend
+    container_name: figma-app
     ports:
       - "3001:3001"
     environment:
@@ -29,23 +29,6 @@ services:
       CLIENT_URL: ${CLIENT_URL:-http://localhost:3001}
     depends_on:
       - mongodb
-    networks:
-      - figma-network
-    restart: unless-stopped
-    volumes:
-      - ./dist:/app/dist
-
-  nginx:
-    image: nginx:alpine
-    container_name: figma-nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./dist:/app/dist:ro
-    depends_on:
-      - backend
     networks:
       - figma-network
     restart: unless-stopped
