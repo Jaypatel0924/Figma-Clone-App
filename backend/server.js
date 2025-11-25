@@ -93,19 +93,6 @@
 //   });
 // });
 
-// // 404 Handler
-// app.use((req, res) => {
-//   res.status(404).json({ error: 'Route not found' });
-// });
-
-// const PORT = process.env.PORT || 3001;
-
-// app.listen(PORT, () => {
-//   console.log(`🚀 Server running on port ${PORT}`);
-// });
-
-// module.exports = app;
-
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
@@ -113,6 +100,7 @@ const mongoose = require('mongoose');
 const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
+const path = require('path');
 
 dotenv.config();
 
@@ -123,9 +111,13 @@ app.use(helmet());
 app.use(compression());
 app.use(morgan('combined'));
 
-// CORS
+// CORS - Allow localhost for development
+const allowedOrigins = process.env.CLIENT_URL 
+  ? process.env.CLIENT_URL.split(',')
+  : ['http://localhost:5173', 'http://localhost:5000', 'http://127.0.0.1:5173'];
+
 app.use(cors({
-  origin: process.env.CLIENT_URL?.split(",") || "https://figma-clone-app-6msf-44fi46uc0-jay-patels-projects-21397060.vercel.app",
+  origin: allowedOrigins,
   credentials: true
 }));
 
@@ -139,11 +131,16 @@ async function connectDB() {
   if (isConnected) return;
 
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI);
+    const conn = await mongoose.connect(process.env.MONGODB_URI, {
+      maxPoolSize: 10,
+      minPoolSize: 5,
+      retryWrites: true,
+      w: 'majority'
+    });
     isConnected = conn.connections[0].readyState;
-    console.log("MongoDB Connected");
+    console.log("✅ MongoDB Connected");
   } catch (error) {
-    console.log("MongoDB Error:", error.message);
+    console.log("❌ MongoDB Error:", error.message);
   }
 }
 
@@ -157,9 +154,13 @@ app.get('/health', (req, res) => {
   res.json({ status: "OK" });
 });
 
+// 404 Handler
+app.use((req, res) => {
+  res.status(404).json({ error: 'Route not found' });
+});
+
 // Serve static files from frontend/dist (production only)
 if (process.env.NODE_ENV === 'production') {
-  const path = require('path');
   app.use(express.static(path.join(__dirname, '../frontend/dist')));
   
   // SPA fallback
@@ -168,5 +169,13 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-// Export for Vercel
-module.exports = (req, res) => app(req, res);
+// Local development - start server
+if (require.main === module) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+  });
+}
+
+// Export for Vercel serverless functions
+module.exports = app;
